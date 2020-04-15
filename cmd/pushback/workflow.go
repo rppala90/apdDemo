@@ -37,7 +37,7 @@ func APDPushbackWorkflow(ctx workflow.Context, requestID string) (result string,
 	for i := 1; i <= num; i++ {
 		retryPolicy := &cadence.RetryPolicy{
 			InitialInterval: time.Second,
-			MaximumAttempts: 2,
+			MaximumAttempts: 3,
 		}
 		aoi := workflow.ActivityOptions{
 			ScheduleToStartTimeout: 5 * 24 * time.Hour,
