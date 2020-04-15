@@ -6,7 +6,7 @@ import (
 
 	"github.com/pborman/uuid"
 	"github.com/rppala90/apdDemo/cmd/common"
-	"github.com/rppala90/apdDemo/cmd/workflow"
+	"github.com/rppala90/apdDemo/cmd/pushback"
 	"go.uber.org/cadence/client"
 	"go.uber.org/cadence/worker"
 )
@@ -19,17 +19,17 @@ func startWorkers(h *common.SampleHelper) {
 		MetricsScope: h.Scope,
 		Logger:       h.Logger,
 	}
-	h.StartWorkers(h.Config.DomainName, workflow.ApplicationName, workerOptions)
+	h.StartWorkers(h.Config.DomainName, pushback.ApplicationName, workerOptions)
 }
 
 func startWorkflow(h *common.SampleHelper, requestID string) {
 	workflowOptions := client.StartWorkflowOptions{
 		ID:                              "businessobject_" + uuid.New(),
-		TaskList:                        workflow.ApplicationName,
+		TaskList:                        pushback.ApplicationName,
 		ExecutionStartToCloseTimeout:    time.Hour,
 		DecisionTaskStartToCloseTimeout: time.Hour,
 	}
-	h.StartWorkflow(workflowOptions, workflow.APDWorkflow, requestID)
+	h.StartWorkflow(workflowOptions, pushback.APDPushbackWorkflow, requestID)
 }
 
 func main() {

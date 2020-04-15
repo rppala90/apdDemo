@@ -60,7 +60,7 @@ func waitForDecisionActivity(ctx context.Context, requestID string) (string, err
 	formData := url.Values{}
 	formData.Add("task_token", string(activityInfo.TaskToken))
 
-	registerCallbackURL := ServerHostPort + "/registerCallback?id=" + requestID
+	registerCallbackURL := ServerHostPort + "/	registerCallback?id=" + requestID
 	resp, err := http.PostForm(registerCallbackURL, formData)
 	if err != nil {
 		logger.Info("waitForDecisionActivity failed to register callback.", zap.Error(err))

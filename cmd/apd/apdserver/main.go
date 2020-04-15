@@ -20,6 +20,7 @@ const (
 	approved               = "APPROVED"
 	rejected               = "REJECTED"
 	completed              = "COMPLETED"
+	pushback               = "PUSHBACK"
 )
 
 var allRequests = make(map[string]requestState)
@@ -97,6 +98,12 @@ func actionHandler(w http.ResponseWriter, r *http.Request) {
 		listHandler(w, r)
 	}
 
+	if allRequests[id] == pushback {
+		allRequests[id] = created
+		fmt.Printf("Set state for %s from %s to %s.\n", id, oldState, allRequests[id])
+		return
+	}
+
 	if oldState == created && (allRequests[id] == approved || allRequests[id] == rejected) {
 		// report state change
 		notifyRequestStateChange(id, string(allRequests[id]))
@@ -109,7 +116,7 @@ func actionHandler(w http.ResponseWriter, r *http.Request) {
 func createHandler(w http.ResponseWriter, r *http.Request) {
 	id := uuid.New()
 	workflowOptions := client.StartWorkflowOptions{
-		ID:                              "businessobject_" + uuid.New(),
+		ID:                              "businessobject_" + id,
 		TaskList:                        workflow.ApplicationName,
 		ExecutionStartToCloseTimeout:    time.Hour,
 		DecisionTaskStartToCloseTimeout: time.Hour,
